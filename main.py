@@ -5,10 +5,10 @@ from openai import OpenAI
 
 app = FastAPI()
 
-# Inicializa o cliente apontando para a API do DeepSeek
+# Conecta à API gratuita da Groq (compatível com OpenAI)
 client = OpenAI(
-    api_key=os.getenv("DEEPSEEK_API_KEY"),
-    base_url="https://api.deepseek.com"
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1"
 )
 
 class ChatRequest(BaseModel):
@@ -18,12 +18,11 @@ class ChatRequest(BaseModel):
 async def chat(request: ChatRequest):
     try:
         response = client.chat.completions.create(
-            model="deepseek-chat",
+            model="llama-3.3-70b-versatile",  # ou "deepseek-r1-distill-llama-70b"
             messages=[
                 {"role": "system", "content": "Você é um assistente virtual útil e objetivo."},
                 {"role": "user", "content": request.message}
-            ],
-            stream=False
+            ]
         )
         return {"response": response.choices[0].message.content}
     except Exception as e:
