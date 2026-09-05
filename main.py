@@ -6,7 +6,6 @@ from openai import OpenAI
 app = FastAPI()
 
 groq_api_key = os.getenv("GROQ_API_KEY")
-
 client = OpenAI(
     api_key=groq_api_key or "DUMMY_KEY",
     base_url="https://api.groq.com/openai/v1"
@@ -26,10 +25,9 @@ async def chat(request: ChatRequest):
             status_code=500, 
             detail="A variável GROQ_API_KEY não foi configurada no Render."
         )
-
     try:
         response = client.chat.completions.create(
-            model="llama3-8b-8192",  # Nome exato do modelo ativo na Groq
+            model="openai/gpt-oss-20b",   # ← modelo atual recomendado
             messages=[
                 {"role": "system", "content": "Você é um assistente virtual útil e objetivo."},
                 {"role": "user", "content": request.message}
